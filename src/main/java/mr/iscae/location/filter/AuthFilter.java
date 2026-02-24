@@ -10,6 +10,13 @@ import javax.ws.rs.core.Response;
 public class AuthFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
+        String path = requestContext.getUriInfo().getPath();
+        String method = requestContext.getMethod();
+        // 1️⃣ Autoriser /login et /register sans authentification
+        if (path.equalsIgnoreCase("login") || path.equalsIgnoreCase("register")) {
+            return;
+        }
+        // Vérification des headers obligatoire pour le reste
         String userIdHeader = requestContext.getHeaderString("X-USER-ID");
         String roleHeader = requestContext.getHeaderString("X-ROLE");
         if (userIdHeader == null || roleHeader == null) {
@@ -28,8 +35,6 @@ public class AuthFilter implements ContainerRequestFilter {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).entity("User not found or role mismatch").build());
             return;
         }
-        String path = requestContext.getUriInfo().getPath();
-        String method = requestContext.getMethod();
         // ADMIN only
         if ((path.startsWith("vehicules") && (method.equals("POST") || method.equals("PUT") || method.equals("DELETE"))) || path.startsWith("managers")) {
             if (!roleHeader.equalsIgnoreCase("ADMIN")) {
