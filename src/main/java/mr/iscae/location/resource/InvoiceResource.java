@@ -9,6 +9,13 @@ import java.util.List;
 
 @Path("/invoices")
 public class InvoiceResource {
+        @GET
+        @Path("/client/{id}")
+        @Produces(MediaType.APPLICATION_JSON)
+        public Response getInvoicesByClient(@PathParam("id") Long clientId) {
+            List<Invoice> invoices = invoiceService.getInvoicesByClient(clientId);
+            return Response.ok(invoices).build();
+        }
     private InvoiceService invoiceService = new InvoiceService();
 
     @POST

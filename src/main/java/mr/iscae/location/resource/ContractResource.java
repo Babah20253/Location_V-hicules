@@ -16,7 +16,10 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response startContract(Contract contract) {
         Contract started = contractService.startContract(contract);
-        return Response.ok(started).build();
+        if (started == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Impossible de démarrer le contrat").build();
+        }
+        return Response.status(Response.Status.CREATED).entity(started).build();
     }
 
     @POST
@@ -25,11 +28,10 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response closeContract(@PathParam("id") Long id, Contract updatedContract) {
         Contract closed = contractService.closeContract(id, updatedContract);
-        if (closed != null) {
-            return Response.ok(closed).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Cannot close contract").build();
+        if (closed == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Impossible de clôturer le contrat").build();
         }
+        return Response.ok(closed).build();
     }
 
     @GET

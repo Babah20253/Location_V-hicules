@@ -16,7 +16,10 @@ public class ReservationResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createReservation(Reservation reservation) {
         Reservation created = reservationService.createReservation(reservation);
-        return Response.ok(created).build();
+        if (created == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Impossible de créer la réservation (conflit, règles métier, ou véhicule indisponible)").build();
+        }
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
     @GET
@@ -44,10 +47,9 @@ public class ReservationResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response validateReservation(@PathParam("id") Long id, Long vehicleId) {
         Reservation validated = reservationService.validateReservation(id, vehicleId);
-        if (validated != null) {
-            return Response.ok(validated).build();
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Cannot validate reservation").build();
+        if (validated == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Impossible de valider la réservation").build();
         }
+        return Response.status(Response.Status.CREATED).entity(validated).build();
     }
 }

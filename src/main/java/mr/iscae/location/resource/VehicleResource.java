@@ -16,7 +16,7 @@ public class VehicleResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addVehicle(Vehicle vehicle) {
         Vehicle created = vehicleService.addVehicle(vehicle);
-        return Response.ok(created).build();
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
     @GET

@@ -16,6 +16,7 @@ public class LoginResource {
     public Response login(User user) {
         User found = userService.login(user.getUsername(), user.getPassword());
         if (found != null) {
+            found.setPassword(null); // Ne jamais retourner le mot de passe
             return Response.ok(found).build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid credentials").build();

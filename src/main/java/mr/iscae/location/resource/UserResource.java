@@ -16,7 +16,7 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerClient(User user) {
         User created = userService.registerClient(user);
-        return Response.ok(created).build();
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 
     @POST
@@ -25,6 +25,6 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createManager(User user) {
         User created = userService.createManager(user);
-        return Response.ok(created).build();
+        return Response.status(Response.Status.CREATED).entity(created).build();
     }
 }
