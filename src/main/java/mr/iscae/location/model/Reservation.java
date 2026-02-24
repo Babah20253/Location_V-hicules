@@ -11,10 +11,9 @@ public class Reservation {
     private String departureAgency;
     private String returnAgency;
     private List<String> options; // GPS, babySeat, fullInsurance
-        public enum Status { PENDING, VALIDATED, CANCELLED }
-        private Status status;
-        private String expectedStart;
-        private String expectedEnd;
+    public enum Status { PENDING, VALIDATED, CANCELLED, COMPLETED }
+    private Status status;
+    // expectedStart/expectedEnd supprimés pour éviter la redondance
     private double cost;
     private Long vehicleId; // Assigned by manager
 
@@ -37,12 +36,8 @@ public class Reservation {
     public void setReturnAgency(String returnAgency) { this.returnAgency = returnAgency; }
     public List<String> getOptions() { return options; }
     public void setOptions(List<String> options) { this.options = options; }
-        public Status getStatus() { return status; }
-        public void setStatus(Status status) { this.status = status; }
-        public String getExpectedStart() { return expectedStart; }
-        public void setExpectedStart(String expectedStart) { this.expectedStart = expectedStart; }
-        public String getExpectedEnd() { return expectedEnd; }
-        public void setExpectedEnd(String expectedEnd) { this.expectedEnd = expectedEnd; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
     public double getCost() { return cost; }
     public void setCost(double cost) { this.cost = cost; }
     public Long getVehicleId() { return vehicleId; }

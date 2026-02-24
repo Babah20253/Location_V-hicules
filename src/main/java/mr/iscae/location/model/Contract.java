@@ -6,8 +6,8 @@ public class Contract {
     private Long vehicleId;
     private Long managerId;
     private String departureTime;
-        private String expectedReturn;
-        private String actualReturn;
+    private String expectedReturn;
+    private String actualReturn;
     private int departureMileage;
     private int returnMileage;
         private double fuelStart;
@@ -30,10 +30,10 @@ public class Contract {
     public void setManagerId(Long managerId) { this.managerId = managerId; }
     public String getDepartureTime() { return departureTime; }
     public void setDepartureTime(String departureTime) { this.departureTime = departureTime; }
-        public String getExpectedReturn() { return expectedReturn; }
-        public void setExpectedReturn(String expectedReturn) { this.expectedReturn = expectedReturn; }
-        public String getActualReturn() { return actualReturn; }
-        public void setActualReturn(String actualReturn) { this.actualReturn = actualReturn; }
+    public String getExpectedReturn() { return expectedReturn; }
+    public void setExpectedReturn(String expectedReturn) { this.expectedReturn = expectedReturn; }
+    public String getActualReturn() { return actualReturn; }
+    public void setActualReturn(String actualReturn) { this.actualReturn = actualReturn; }
     public int getDepartureMileage() { return departureMileage; }
     public void setDepartureMileage(int departureMileage) { this.departureMileage = departureMileage; }
     public int getReturnMileage() { return returnMileage; }
