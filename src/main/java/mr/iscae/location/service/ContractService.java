@@ -58,12 +58,23 @@ public class ContractService {
             // Total cost
             double total = dailyRate * rentalDays + optionsCost + delayPenalty + fuelPenalty + damagePenalty;
             contract.setPenalties(delayPenalty + fuelPenalty + damagePenalty);
-            // Generate invoice
+            // Générer la facture via InvoiceService
+            InvoiceService invoiceService = new InvoiceService();
             Invoice invoice = new Invoice();
             invoice.setContractId(contract.getId());
             invoice.setTotalCost(total);
             invoice.setBreakdown("Rental: " + rentalDays + " days x " + dailyRate + ", options: " + optionsCost + ", delay: " + delayPenalty + ", fuel: " + fuelPenalty + ", damages: " + damagePenalty);
-            DatabaseMemory.invoices.put(invoice.getId(), invoice);
+            invoice.setDelayPenalty(delayPenalty);
+            invoice.setFuelPenalty(fuelPenalty);
+            invoice.setDamagePenalty(damagePenalty);
+            invoice.setOptionsCost(optionsCost);
+            invoice.setRentalDays(rentalDays);
+            invoice.setDailyRate(dailyRate);
+            invoice.setClientId(reservation.getClientId());
+            invoiceService.generateInvoice(invoice);
+            // Mettre à jour les statuts
+            vehicle.setStatus(Vehicle.Status.AVAILABLE);
+            reservation.setStatus(Reservation.Status.COMPLETED);
             return contract;
         }
         return null;

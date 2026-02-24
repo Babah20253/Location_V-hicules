@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InvoiceService {
+        public List<Invoice> getInvoicesByClient(Long clientId) {
+            return DatabaseMemory.invoices.values().stream()
+                .filter(inv -> inv.getClientId() != null && inv.getClientId().equals(clientId))
+                .collect(Collectors.toList());
+        }
     private static AtomicLong idCounter = new AtomicLong(1);
 
     public Invoice generateInvoice(Invoice invoice) {

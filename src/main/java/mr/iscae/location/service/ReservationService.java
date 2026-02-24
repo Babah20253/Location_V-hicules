@@ -25,19 +25,20 @@ public class ReservationService {
         java.time.LocalDateTime end = java.time.LocalDateTime.parse(reservation.getEndDateTime());
         if (start.isBefore(java.time.LocalDateTime.now())) return null;
         if (end.isBefore(start)) return null;
-        // One active reservation/contract per client
+        // Empêcher plus d'une réservation active (PENDING ou VALIDATED) par client
         boolean hasActive = DatabaseMemory.reservations.values().stream()
-            .anyMatch(r -> r.getClientId().equals(reservation.getClientId()) && r.getStatus() == Reservation.Status.VALIDATED);
+            .anyMatch(r -> r.getClientId().equals(reservation.getClientId()) &&
+                (r.getStatus() == Reservation.Status.PENDING || r.getStatus() == Reservation.Status.VALIDATED));
         if (hasActive) return null;
-        // Find available vehicle
-        Vehicle vehicle = DatabaseMemory.vehicles.values().stream()
+        // Filtrer les véhicules disponibles sans chevauchement
+        List<Vehicle> availableVehicles = DatabaseMemory.vehicles.values().stream()
             .filter(v -> v.getCategory().name().equalsIgnoreCase(reservation.getVehicleCategory()) && v.getStatus() == Vehicle.Status.AVAILABLE)
-            .findFirst().orElse(null);
-        if (vehicle == null) return null;
-        // Overlap check
-        boolean overlap = DatabaseMemory.reservations.values().stream()
-            .anyMatch(r -> r.getVehicleId() != null && r.getVehicleId().equals(vehicle.getId()) && DatabaseMemory.datesOverlap(r.getStartDateTime(), r.getEndDateTime(), reservation.getStartDateTime(), reservation.getEndDateTime()));
-        if (overlap) return null;
+            .filter(v -> DatabaseMemory.reservations.values().stream()
+                .filter(r -> r.getVehicleId() != null && r.getVehicleId().equals(v.getId()))
+                .noneMatch(r -> DatabaseMemory.datesOverlap(r.getStartDateTime(), r.getEndDateTime(), reservation.getStartDateTime(), reservation.getEndDateTime())))
+            .collect(Collectors.toList());
+        if (availableVehicles.isEmpty()) return null;
+        Vehicle vehicle = availableVehicles.get(0);
         reservation.setId(idCounter.getAndIncrement());
         reservation.setStatus(Reservation.Status.PENDING);
         reservation.setVehicleId(vehicle.getId());
