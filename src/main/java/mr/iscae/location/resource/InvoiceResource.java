@@ -6,7 +6,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-
+import mr.iscae.location.model.PaymentRequest;
 @Path("/invoices")
 public class InvoiceResource {
         @GET
@@ -32,4 +32,18 @@ public class InvoiceResource {
         List<Invoice> invoices = invoiceService.getAllInvoices();
         return Response.ok(invoices).build();
     }
+    
+    @POST
+    @Path("/{id}/pay")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response payInvoice(@PathParam("id") Long id, PaymentRequest payment) {
+         Invoice invoice = invoiceService.getInvoiceById(id);
+         if (invoice == null) {
+             return Response.status(Response.Status.NOT_FOUND).entity("Invoice not found").build();
+      }
+         invoice.setPaid(true);
+         return Response.ok(invoice).build();
+}
+    
 }

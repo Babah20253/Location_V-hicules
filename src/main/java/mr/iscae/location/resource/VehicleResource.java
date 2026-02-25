@@ -37,4 +37,21 @@ public class VehicleResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
         }
     }
+
+    @PUT
+    @Path("/{id}") 
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON) 
+    public Response updateVehicle(@PathParam("id") Long id, Vehicle updated) {
+    Vehicle vehicle = vehicleService.getAllVehicles().stream()
+        .filter(v -> v.getId().equals(id))
+        .findFirst()
+        .orElse(null);
+    if (vehicle == null) {
+        return Response.status(Response.Status.NOT_FOUND).entity("Vehicle not found").build();
+    }
+    vehicle.setDailyRate(updated.getDailyRate());
+    return Response.ok(vehicle).build();
+}  
+    
 }

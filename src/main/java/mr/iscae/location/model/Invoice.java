@@ -1,6 +1,9 @@
 package mr.iscae.location.model;
 
 public class Invoice {
+        private boolean paid;
+        public boolean isPaid() { return paid; }
+        public void setPaid(boolean paid) { this.paid = paid; }
     private Long id;
     private Long contractId;
     private double totalCost;

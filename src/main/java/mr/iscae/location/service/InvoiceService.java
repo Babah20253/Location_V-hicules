@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class InvoiceService {
+            public Invoice getInvoiceById(Long id) {
+                return DatabaseMemory.invoices.get(id);
+            }
         public List<Invoice> getInvoicesByClient(Long clientId) {
             return DatabaseMemory.invoices.values().stream()
                 .filter(inv -> inv.getClientId() != null && inv.getClientId().equals(clientId))
